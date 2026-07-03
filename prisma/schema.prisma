@@ -1,0 +1,74 @@
+// DPP PIM 資料模型
+// Product 為核心,掛載 DPP 所需的材料組成與供應鏈資訊
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Product {
+    id       String @id @default(cuid())
+    // DPP 公開頁使用的識別碼,與內部 id 分離避免洩漏
+    publicId String @unique @default(uuid())
+
+    // SQLite 不支援 enum,以字串儲存:DRAFT | PUBLISHED
+    status String @default("DRAFT")
+
+    // --- PIM 基本資訊 ---
+    name        String
+    sku         String  @unique
+    gtin        String?
+    brand       String?
+    category    String?
+    description String?
+    imageUrl    String?
+
+    // --- DPP 永續性資訊 ---
+    countryOfOrigin    String?
+    carbonFootprintKg  Float? // 碳足跡 (kg CO2e)
+    recyclabilityPct   Float? // 可回收比例 0-100
+    durabilityYears    Int? // 預期使用年限
+    repairabilityScore Float? // 可修復性評分 0-10
+    careInstructions   String?
+    certifications     String? // 逗號分隔,MVP 簡化處理
+
+    materials   Material[]
+    supplyChain SupplyChainStep[]
+
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    publishedAt DateTime?
+
+    @@index([status])
+    @@index([name])
+}
+
+model Material {
+    id         String  @id @default(cuid())
+    productId  String
+    product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    name       String
+    percentage Float // 佔比 0-100
+    recycled   Boolean @default(false)
+    origin     String?
+
+    @@index([productId])
+}
+
+model SupplyChainStep {
+    id          String  @id @default(cuid())
+    productId   String
+    product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    order       Int // 步驟順序
+    stage       String // 例如 Raw Material / Manufacturing / Assembly / Distribution
+    facility    String?
+    location    String?
+    description String?
+
+    @@index([productId])
+}
