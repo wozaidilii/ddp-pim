@@ -1,56 +1,57 @@
 # DPP PIM
 
-一個以 **Digital Product Passport(數位產品護照)** 為核心功能的 **PIM(產品資訊管理)** MVP,使用 [T3 Stack](https://create.t3.gg/) 構建。
+A **PIM (Product Information Management)** MVP centered on **Digital Product Passport (DPP)** features, built with the [T3 Stack](https://create.t3.gg/).
 
-## 功能
+## Features
 
-- **產品管理**:建立、編輯、刪除產品,涵蓋 SKU、GTIN、品牌、分類等 PIM 基本欄位
-- **DPP 資料**:碳足跡、可回收比例、耐用年限、可修復性評分、認證、保養說明
-- **材料組成**:多筆材料、佔比、回收料標記、來源地
-- **供應鏈旅程**:依序記錄原料、製造、配送等步驟
-- **一鍵發佈**:發佈後產生公開的 DPP 頁面(`/dpp/[publicId]`),附 QR code,消費者掃碼即可查看
+- **Product management**: create, edit, and delete products with core PIM fields such as SKU, GTIN, brand, and category
+- **DPP data**: carbon footprint, recyclability, expected lifetime, repairability score, certifications, and care instructions
+- **Material composition**: multiple materials with share percentage, recycled flag, and origin
+- **Supply chain journey**: ordered steps covering raw material, manufacturing, distribution, and more
+- **One-click publishing**: publishing generates a public DPP page (`/dpp/[publicId]`) with a QR code that consumers can scan
 
-## 技術棧
+## Tech Stack
 
-- [Next.js](https://nextjs.org)(App Router)
+- [Next.js](https://nextjs.org) (App Router)
 - [tRPC](https://trpc.io)
 - [Prisma](https://prisma.io) + SQLite
 - [Tailwind CSS](https://tailwindcss.com)
 - TypeScript
 
-## 開始使用
+## Getting Started
 
 ```bash
 npm install
-npm run db:push   # 建立 SQLite 資料庫
-npm run db:seed   # 匯入示範資料(可選)
-npm run dev       # 啟動開發伺服器 http://localhost:3000
+npm run db:push   # create the SQLite database
+npm run db:seed   # load demo data (optional)
+npm run dev       # start the dev server at http://localhost:3000
 ```
 
-## 常用指令
+## Commands
 
-| 指令 | 說明 |
+| Command | Description |
 | --- | --- |
-| `npm run dev` | 啟動開發伺服器 |
-| `npm run build` | 正式環境 build |
-| `npm run db:push` | 同步 Prisma schema 到資料庫 |
-| `npm run db:seed` | 匯入示範資料 |
-| `npm run db:studio` | 開啟 Prisma Studio 檢視資料 |
-| `npm run typecheck` | TypeScript 型別檢查 |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run db:push` | Sync the Prisma schema to the database |
+| `npm run db:seed` | Load demo data |
+| `npm run db:studio` | Open Prisma Studio to inspect data |
+| `npm run typecheck` | TypeScript type checking |
 
-## 頁面結構
+## Pages
 
-| 路徑 | 說明 |
+| Path | Description |
 | --- | --- |
-| `/` | 產品列表(管理後台) |
-| `/products/new` | 建立產品 |
-| `/products/[id]` | 編輯產品 |
-| `/dpp/[publicId]` | 公開 DPP 頁面(僅已發佈產品可見) |
+| `/` | Product list (admin) |
+| `/products/new` | Create a product |
+| `/products/[id]` | Edit a product |
+| `/dpp/[publicId]` | Public DPP page (published products only) |
 
-## MVP 之後的方向
+## Beyond the MVP
 
-- 使用者認證與多租戶(NextAuth)
-- 圖片上傳(目前僅支援外部網址)
-- DPP 欄位對齊 EU ESPR 法規要求
-- 批次匯入 / 匯出(CSV)
-- 產品版本歷史與稽核紀錄
+- User authentication and multi-tenancy (NextAuth)
+- Image uploads (currently external URLs only)
+- Aligning DPP fields with EU ESPR regulatory requirements
+- Batch import / export (CSV)
+- Product version history and audit logs
+# ddp-pim
