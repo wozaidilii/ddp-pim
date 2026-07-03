@@ -87,6 +87,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -137,6 +140,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -159,7 +167,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/kris/Projects/dpp-pim/generated/prisma",
+      "value": "/Users/kris/Projects/ayiora/dpp-pim/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -173,7 +181,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/kris/Projects/dpp-pim/prisma/schema.prisma",
+    "sourceFilePath": "/Users/kris/Projects/ayiora/dpp-pim/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -186,7 +194,8 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -195,8 +204,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// DPP PIM 資料模型\n// Product 為核心,掛載 DPP 所需的材料組成與供應鏈資訊\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Product {\n  id       String @id @default(cuid())\n  // DPP 公開頁使用的識別碼,與內部 id 分離避免洩漏\n  publicId String @unique @default(uuid())\n\n  // SQLite 不支援 enum,以字串儲存:DRAFT | PUBLISHED\n  status String @default(\"DRAFT\")\n\n  // --- PIM 基本資訊 ---\n  name        String\n  sku         String  @unique\n  gtin        String?\n  brand       String?\n  category    String?\n  description String?\n  imageUrl    String?\n\n  // --- DPP 永續性資訊 ---\n  countryOfOrigin    String?\n  carbonFootprintKg  Float? // 碳足跡 (kg CO2e)\n  recyclabilityPct   Float? // 可回收比例 0-100\n  durabilityYears    Int? // 預期使用年限\n  repairabilityScore Float? // 可修復性評分 0-10\n  careInstructions   String?\n  certifications     String? // 逗號分隔,MVP 簡化處理\n\n  materials   Material[]\n  supplyChain SupplyChainStep[]\n\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n  publishedAt DateTime?\n\n  @@index([status])\n  @@index([name])\n}\n\nmodel Material {\n  id         String  @id @default(cuid())\n  productId  String\n  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)\n  name       String\n  percentage Float // 佔比 0-100\n  recycled   Boolean @default(false)\n  origin     String?\n\n  @@index([productId])\n}\n\nmodel SupplyChainStep {\n  id          String  @id @default(cuid())\n  productId   String\n  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)\n  order       Int // 步驟順序\n  stage       String // 例如 Raw Material / Manufacturing / Assembly / Distribution\n  facility    String?\n  location    String?\n  description String?\n\n  @@index([productId])\n}\n",
-  "inlineSchemaHash": "86aedebe637383848d63e74cd2909c1a6c7cc0afb5fd6a66f9124eb8e603e2c7",
+  "inlineSchema": "// DPP PIM data model\n// Product is the core entity, carrying the material composition and\n// supply chain information required for the Digital Product Passport\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Product {\n  id       String @id @default(cuid())\n  // Identifier used by the public DPP page, separate from the internal id\n  publicId String @unique @default(uuid())\n\n  // SQLite has no enum support, stored as string: DRAFT | PUBLISHED\n  status String @default(\"DRAFT\")\n\n  // --- PIM basics ---\n  name        String\n  sku         String  @unique\n  gtin        String?\n  brand       String?\n  category    String?\n  description String?\n  imageUrl    String?\n\n  // --- DPP sustainability data ---\n  countryOfOrigin    String?\n  carbonFootprintKg  Float? // carbon footprint (kg CO2e)\n  recyclabilityPct   Float? // recyclable share 0-100\n  durabilityYears    Int? // expected lifetime in years\n  repairabilityScore Float? // repairability score 0-10\n  careInstructions   String?\n  certifications     String? // comma-separated, kept simple for the MVP\n\n  materials   Material[]\n  supplyChain SupplyChainStep[]\n\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n  publishedAt DateTime?\n\n  @@index([status])\n  @@index([name])\n}\n\nmodel Material {\n  id         String  @id @default(cuid())\n  productId  String\n  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)\n  name       String\n  percentage Float // share 0-100\n  recycled   Boolean @default(false)\n  origin     String?\n\n  @@index([productId])\n}\n\nmodel SupplyChainStep {\n  id          String  @id @default(cuid())\n  productId   String\n  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)\n  order       Int // step order\n  stage       String // e.g. Raw Material / Manufacturing / Assembly / Distribution\n  facility    String?\n  location    String?\n  description String?\n\n  @@index([productId])\n}\n",
+  "inlineSchemaHash": "28c665a848d6b4fccaed421650572f8bd6ac7d94e98fbce8b304d4def8a153f3",
   "copyEngine": true
 }
 config.dirname = '/'

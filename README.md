@@ -14,18 +14,33 @@ A **PIM (Product Information Management)** MVP centered on **Digital Product Pas
 
 - [Next.js](https://nextjs.org) (App Router)
 - [tRPC](https://trpc.io)
-- [Prisma](https://prisma.io) + SQLite
+- [Prisma](https://prisma.io) + PostgreSQL
 - [Tailwind CSS](https://tailwindcss.com)
 - TypeScript
 
 ## Getting Started
 
+1. Create a free PostgreSQL database at [Neon](https://neon.tech) (or use Vercel Postgres)
+2. Copy `.env.example` to `.env` and set `DATABASE_URL`
+
 ```bash
 npm install
-npm run db:push   # create the SQLite database
+npm run db:push   # sync schema to the database
 npm run db:seed   # load demo data (optional)
 npm run dev       # start the dev server at http://localhost:3000
 ```
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub and import it in Vercel
+2. Create a PostgreSQL database (Neon or Vercel Postgres)
+3. In **Vercel → Project → Settings → Environment Variables**, add:
+   - `DATABASE_URL` = your PostgreSQL connection string (include `?sslmode=require` for Neon)
+4. Redeploy
+
+Vercel runs the `vercel-build` script, which generates the Prisma client, pushes the schema, and builds Next.js.
+
+> **Note:** SQLite does not work on Vercel serverless — a hosted PostgreSQL database is required.
 
 ## Commands
 
@@ -54,4 +69,3 @@ npm run dev       # start the dev server at http://localhost:3000
 - Aligning DPP fields with EU ESPR regulatory requirements
 - Batch import / export (CSV)
 - Product version history and audit logs
-# ddp-pim

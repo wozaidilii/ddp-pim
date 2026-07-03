@@ -1,5 +1,6 @@
-// DPP PIM 資料模型
-// Product 為核心,掛載 DPP 所需的材料組成與供應鏈資訊
+// DPP PIM data model
+// Product is the core entity, carrying the material composition and
+// supply chain information required for the Digital Product Passport
 
 generator client {
   provider = "prisma-client-js"
@@ -7,19 +8,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Product {
   id       String @id @default(cuid())
-  // DPP 公開頁使用的識別碼,與內部 id 分離避免洩漏
+  // Identifier used by the public DPP page, separate from the internal id
   publicId String @unique @default(uuid())
 
-  // SQLite 不支援 enum,以字串儲存:DRAFT | PUBLISHED
+  // SQLite has no enum support, stored as string: DRAFT | PUBLISHED
   status String @default("DRAFT")
 
-  // --- PIM 基本資訊 ---
+  // --- PIM basics ---
   name        String
   sku         String  @unique
   gtin        String?
@@ -28,14 +29,14 @@ model Product {
   description String?
   imageUrl    String?
 
-  // --- DPP 永續性資訊 ---
+  // --- DPP sustainability data ---
   countryOfOrigin    String?
-  carbonFootprintKg  Float? // 碳足跡 (kg CO2e)
-  recyclabilityPct   Float? // 可回收比例 0-100
-  durabilityYears    Int? // 預期使用年限
-  repairabilityScore Float? // 可修復性評分 0-10
+  carbonFootprintKg  Float? // carbon footprint (kg CO2e)
+  recyclabilityPct   Float? // recyclable share 0-100
+  durabilityYears    Int? // expected lifetime in years
+  repairabilityScore Float? // repairability score 0-10
   careInstructions   String?
-  certifications     String? // 逗號分隔,MVP 簡化處理
+  certifications     String? // comma-separated, kept simple for the MVP
 
   materials   Material[]
   supplyChain SupplyChainStep[]
@@ -53,7 +54,7 @@ model Material {
   productId  String
   product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   name       String
-  percentage Float // 佔比 0-100
+  percentage Float // share 0-100
   recycled   Boolean @default(false)
   origin     String?
 
@@ -64,8 +65,8 @@ model SupplyChainStep {
   id          String  @id @default(cuid())
   productId   String
   product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  order       Int // 步驟順序
-  stage       String // 例如 Raw Material / Manufacturing / Assembly / Distribution
+  order       Int // step order
+  stage       String // e.g. Raw Material / Manufacturing / Assembly / Distribution
   facility    String?
   location    String?
   description String?
