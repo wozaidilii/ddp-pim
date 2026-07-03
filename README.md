@@ -38,7 +38,9 @@ npm run dev       # start the dev server at http://localhost:3000
    - `DATABASE_URL` = your PostgreSQL connection string (include `?sslmode=require` for Neon)
 4. Redeploy
 
-Vercel runs the `vercel-build` script, which generates the Prisma client, pushes the schema, and builds Next.js.
+Vercel runs the `vercel-build` script, which generates the Prisma client, applies pending migrations, and builds Next.js.
+
+> **Reused PostgreSQL database:** If `DATABASE_URL` points at a database that already contains tables from another app, the deploy script creates the DPP PIM tables (`Product`, `Material`, `SupplyChainStep`) without dropping existing tables. For a clean slate, create a dedicated database (recommended) or run `npm run db:push -- --accept-data-loss` locally to replace the entire schema.
 
 > **Note:** SQLite does not work on Vercel serverless — a hosted PostgreSQL database is required.
 
