@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 
-/** 以當前頁面網址產生 QR code,僅在客戶端渲染以取得完整 URL */
+/** Renders a QR code for the current page URL; client-only to access the full URL */
 export function DppQrCode() {
   const [url, setUrl] = useState<string | null>(null);
 

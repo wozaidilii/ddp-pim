@@ -11,7 +11,8 @@ export default async function HomePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
         <p className="mt-1 text-sm text-stone-500">
-          管理產品資訊,並為每個產品發佈數位產品護照 (DPP)
+          Manage product information and publish a Digital Product Passport
+          (DPP) for each product
         </p>
       </div>
       <ProductList />

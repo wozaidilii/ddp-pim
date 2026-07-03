@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** PIM 管理後台的共用外框,DPP 公開頁不套用 */
+/** Shared chrome for the PIM admin area; public DPP pages don't use it */
 export default function PimLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

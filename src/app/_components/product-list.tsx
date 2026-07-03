@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { api } from "~/trpc/react";
 
-/** 產品狀態徽章 */
+/** Product status badge */
 function StatusBadge({ status }: { status: string }) {
   const published = status === "PUBLISHED";
   return (
@@ -37,24 +37,24 @@ export function ProductList() {
   });
 
   if (isLoading) {
-    return <p className="py-12 text-center text-stone-400">載入中…</p>;
+    return <p className="py-12 text-center text-stone-400">Loading…</p>;
   }
   if (error) {
     return (
       <p className="py-12 text-center text-red-500">
-        載入失敗:{error.message}
+        Failed to load: {error.message}
       </p>
     );
   }
   if (!products || products.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-stone-300 bg-white py-16 text-center">
-        <p className="text-stone-500">還沒有任何產品</p>
+        <p className="text-stone-500">No products yet</p>
         <Link
           href="/products/new"
           className="mt-3 inline-block rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
         >
-          建立第一個產品
+          Create your first product
         </Link>
       </div>
     );
@@ -127,7 +127,7 @@ export function ProductList() {
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm(`確定要刪除「${product.name}」嗎?`)) {
+                      if (confirm(`Delete "${product.name}"?`)) {
                         deleteProduct.mutate({ id: product.id });
                       }
                     }}

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-/** 表單內部使用字串儲存數字欄位,送出時再安全轉型 */
+/** The form keeps numeric fields as strings and converts them safely on submit */
 type MaterialRow = {
   name: string;
   percentage: string;
@@ -58,7 +58,7 @@ const emptyForm: FormState = {
   supplyChain: [],
 };
 
-/** 空字串回傳 undefined,非法數字也回傳 undefined,避免 NaN 汙染資料 */
+/** Returns undefined for empty or invalid numbers so NaN never leaks into the data */
 function parseOptionalNumber(value: string): number | undefined {
   const trimmed = value.trim();
   if (trimmed === "") return undefined;
@@ -124,7 +124,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
       repairabilityScore: parseOptionalNumber(form.repairabilityScore),
       careInstructions: form.careInstructions || undefined,
       certifications: form.certifications || undefined,
-      // 名稱為空的列視為未填寫,直接略過
+      // Rows without a name are treated as blank and skipped
       materials: form.materials
         .filter((m) => m.name.trim() !== "")
         .map((m) => ({
@@ -162,14 +162,14 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
         </div>
       )}
 
-      {/* 基本資訊 */}
+      {/* Basic information */}
       <section className="rounded-xl border border-stone-200 bg-white p-6">
         <h2 className="mb-4 text-sm font-semibold tracking-wide text-stone-500 uppercase">
-          基本資訊
+          Basic Information
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>產品名稱 *</label>
+            <label className={labelClass}>Product Name *</label>
             <input
               className={inputClass}
               value={form.name}
@@ -187,7 +187,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>GTIN / 條碼</label>
+            <label className={labelClass}>GTIN / Barcode</label>
             <input
               className={inputClass}
               value={form.gtin}
@@ -195,7 +195,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>品牌</label>
+            <label className={labelClass}>Brand</label>
             <input
               className={inputClass}
               value={form.brand}
@@ -203,16 +203,16 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>分類</label>
+            <label className={labelClass}>Category</label>
             <input
               className={inputClass}
               value={form.category}
               onChange={(e) => set("category", e.target.value)}
-              placeholder="例如 Apparel, Electronics"
+              placeholder="e.g. Apparel, Electronics"
             />
           </div>
           <div>
-            <label className={labelClass}>圖片網址</label>
+            <label className={labelClass}>Image URL</label>
             <input
               className={inputClass}
               value={form.imageUrl}
@@ -221,7 +221,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className={labelClass}>描述</label>
+            <label className={labelClass}>Description</label>
             <textarea
               className={inputClass}
               rows={3}
@@ -232,23 +232,23 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
         </div>
       </section>
 
-      {/* 永續性資訊 */}
+      {/* Sustainability data */}
       <section className="rounded-xl border border-stone-200 bg-white p-6">
         <h2 className="mb-4 text-sm font-semibold tracking-wide text-stone-500 uppercase">
-          永續性資訊 (DPP)
+          Sustainability (DPP)
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className={labelClass}>原產國</label>
+            <label className={labelClass}>Country of Origin</label>
             <input
               className={inputClass}
               value={form.countryOfOrigin}
               onChange={(e) => set("countryOfOrigin", e.target.value)}
-              placeholder="例如 Taiwan"
+              placeholder="e.g. Taiwan"
             />
           </div>
           <div>
-            <label className={labelClass}>碳足跡 (kg CO2e)</label>
+            <label className={labelClass}>Carbon Footprint (kg CO2e)</label>
             <input
               className={inputClass}
               type="number"
@@ -259,7 +259,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>可回收比例 (%)</label>
+            <label className={labelClass}>Recyclability (%)</label>
             <input
               className={inputClass}
               type="number"
@@ -271,7 +271,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>預期使用年限 (年)</label>
+            <label className={labelClass}>Expected Lifetime (years)</label>
             <input
               className={inputClass}
               type="number"
@@ -282,7 +282,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>可修復性評分 (0-10)</label>
+            <label className={labelClass}>Repairability Score (0-10)</label>
             <input
               className={inputClass}
               type="number"
@@ -294,7 +294,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div>
-            <label className={labelClass}>認證 (逗號分隔)</label>
+            <label className={labelClass}>Certifications (comma-separated)</label>
             <input
               className={inputClass}
               value={form.certifications}
@@ -303,7 +303,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             />
           </div>
           <div className="sm:col-span-3">
-            <label className={labelClass}>保養說明</label>
+            <label className={labelClass}>Care Instructions</label>
             <textarea
               className={inputClass}
               rows={2}
@@ -314,11 +314,11 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
         </div>
       </section>
 
-      {/* 材料組成 */}
+      {/* Material composition */}
       <section className="rounded-xl border border-stone-200 bg-white p-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-            材料組成
+            Material Composition
           </h2>
           <button
             type="button"
@@ -330,11 +330,11 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             }
             className="rounded-md px-2 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-50"
           >
-            + 新增材料
+            + Add Material
           </button>
         </div>
         {form.materials.length === 0 ? (
-          <p className="text-sm text-stone-400">尚未新增材料</p>
+          <p className="text-sm text-stone-400">No materials added yet</p>
         ) : (
           <div className="space-y-3">
             {form.materials.map((material, index) => (
@@ -343,18 +343,18 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                 className="grid grid-cols-1 items-end gap-3 rounded-lg bg-stone-50 p-3 sm:grid-cols-[1fr_100px_1fr_auto_auto]"
               >
                 <div>
-                  <label className={labelClass}>材料名稱</label>
+                  <label className={labelClass}>Material Name</label>
                   <input
                     className={inputClass}
                     value={material.name}
                     onChange={(e) =>
                       setMaterial(index, { name: e.target.value })
                     }
-                    placeholder="例如 Organic Cotton"
+                    placeholder="e.g. Organic Cotton"
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>佔比 %</label>
+                  <label className={labelClass}>Share %</label>
                   <input
                     className={inputClass}
                     type="number"
@@ -368,7 +368,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>來源地</label>
+                  <label className={labelClass}>Origin</label>
                   <input
                     className={inputClass}
                     value={material.origin}
@@ -386,7 +386,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                     }
                     className="accent-emerald-600"
                   />
-                  回收料
+                  Recycled
                 </label>
                 <button
                   type="button"
@@ -398,7 +398,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                   }
                   className="pb-2 text-xs text-red-500 hover:text-red-700"
                 >
-                  移除
+                  Remove
                 </button>
               </div>
             ))}
@@ -406,11 +406,11 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
         )}
       </section>
 
-      {/* 供應鏈 */}
+      {/* Supply chain */}
       <section className="rounded-xl border border-stone-200 bg-white p-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-semibold tracking-wide text-stone-500 uppercase">
-            供應鏈
+            Supply Chain
           </h2>
           <button
             type="button"
@@ -422,11 +422,11 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
             }
             className="rounded-md px-2 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-50"
           >
-            + 新增步驟
+            + Add Step
           </button>
         </div>
         {form.supplyChain.length === 0 ? (
-          <p className="text-sm text-stone-400">尚未新增供應鏈步驟</p>
+          <p className="text-sm text-stone-400">No supply chain steps added yet</p>
         ) : (
           <div className="space-y-3">
             {form.supplyChain.map((step, index) => (
@@ -438,16 +438,16 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                   {index + 1}
                 </span>
                 <div>
-                  <label className={labelClass}>階段</label>
+                  <label className={labelClass}>Stage</label>
                   <input
                     className={inputClass}
                     value={step.stage}
                     onChange={(e) => setStep(index, { stage: e.target.value })}
-                    placeholder="例如 Manufacturing"
+                    placeholder="e.g. Manufacturing"
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>工廠 / 設施</label>
+                  <label className={labelClass}>Facility</label>
                   <input
                     className={inputClass}
                     value={step.facility}
@@ -457,7 +457,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>地點</label>
+                  <label className={labelClass}>Location</label>
                   <input
                     className={inputClass}
                     value={step.location}
@@ -476,7 +476,7 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
                   }
                   className="pb-2 text-xs text-red-500 hover:text-red-700"
                 >
-                  移除
+                  Remove
                 </button>
               </div>
             ))}
@@ -490,14 +490,14 @@ export function ProductForm({ initial }: { initial?: ProductFormInitial }) {
           disabled={isPending}
           className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-50"
         >
-          {isPending ? "儲存中…" : initial ? "儲存變更" : "建立產品"}
+          {isPending ? "Saving…" : initial ? "Save Changes" : "Create Product"}
         </button>
         <button
           type="button"
           onClick={() => router.push("/")}
           className="rounded-lg px-4 py-2.5 text-sm text-stone-600 transition hover:bg-stone-100"
         >
-          取消
+          Cancel
         </button>
       </div>
     </form>

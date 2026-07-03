@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Digital Product Passport",
 };
 
-/** 永續性指標卡片 */
+/** Sustainability metric card */
 function MetricCard({
   label,
   value,
@@ -53,7 +53,7 @@ export default async function DppPage({
 
   return (
     <div className="min-h-screen bg-stone-50 pb-16">
-      {/* 頁首 */}
+      {/* Header */}
       <div className="bg-emerald-700 text-white">
         <div className="mx-auto max-w-3xl px-6 py-8">
           <p className="text-xs font-medium tracking-widest text-emerald-200 uppercase">
@@ -78,7 +78,7 @@ export default async function DppPage({
       </div>
 
       <div className="mx-auto max-w-3xl space-y-8 px-6 pt-8">
-        {/* 產品圖片與描述 */}
+        {/* Product image and description */}
         {(product.imageUrl ?? product.description) && (
           <section className="flex gap-6 rounded-xl border border-stone-200 bg-white p-6">
             {product.imageUrl && (
@@ -96,7 +96,7 @@ export default async function DppPage({
           </section>
         )}
 
-        {/* 永續性指標 */}
+        {/* Sustainability metrics */}
         <section>
           <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
             Sustainability
@@ -133,7 +133,7 @@ export default async function DppPage({
           )}
         </section>
 
-        {/* 材料組成 */}
+        {/* Material composition */}
         {product.materials.length > 0 && (
           <section>
             <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
@@ -179,7 +179,7 @@ export default async function DppPage({
           </section>
         )}
 
-        {/* 供應鏈旅程 */}
+        {/* Supply chain journey */}
         {product.supplyChain.length > 0 && (
           <section>
             <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
@@ -188,7 +188,7 @@ export default async function DppPage({
             <ol className="space-y-0">
               {product.supplyChain.map((step, index) => (
                 <li key={step.id} className="relative flex gap-4 pb-6 last:pb-0">
-                  {/* 時間軸連接線 */}
+                  {/* Timeline connector */}
                   {index < product.supplyChain.length - 1 && (
                     <span className="absolute top-8 left-[15px] h-full w-px bg-stone-200" />
                   )}
@@ -216,7 +216,7 @@ export default async function DppPage({
           </section>
         )}
 
-        {/* 認證與保養 */}
+        {/* Certifications and care */}
         {(certifications.length > 0 || product.careInstructions) && (
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {certifications.length > 0 && (

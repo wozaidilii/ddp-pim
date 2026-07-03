@@ -9,7 +9,7 @@ import { api } from "~/trpc/server";
 
 export const dynamic = "force-dynamic";
 
-/** 將資料庫的 null 與數字欄位轉成表單使用的字串 */
+/** Convert database null and numeric fields into the strings the form uses */
 const toText = (value: string | number | null) =>
   value === null ? "" : String(value);
 
@@ -61,7 +61,7 @@ export default async function EditProductPage({
             {product.name}
           </h1>
           <p className="mt-1 text-sm text-stone-500">
-            編輯產品資訊與 DPP 資料
+            Edit product information and DPP data
           </p>
         </div>
         {product.status === "PUBLISHED" && (
@@ -70,7 +70,7 @@ export default async function EditProductPage({
             target="_blank"
             className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
           >
-            檢視公開 DPP →
+            View public DPP →
           </Link>
         )}
       </div>

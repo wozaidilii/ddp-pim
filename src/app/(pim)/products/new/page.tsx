@@ -6,7 +6,8 @@ export default function NewProductPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">New Product</h1>
         <p className="mt-1 text-sm text-stone-500">
-          填寫產品資訊與 DPP 所需的永續性資料
+          Fill in product information and the sustainability data required for
+          the DPP
         </p>
       </div>
       <ProductForm />

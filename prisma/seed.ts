@@ -1,4 +1,4 @@
-// 示範資料:一件已發佈的有機棉 T-shirt 與一個草稿狀態的水壺
+// Demo data: a published organic cotton t-shirt and a draft water bottle
 import { PrismaClient } from "../generated/prisma";
 
 const db = new PrismaClient();
@@ -6,7 +6,7 @@ const db = new PrismaClient();
 async function main() {
   const existing = await db.product.count();
   if (existing > 0) {
-    console.log("資料庫已有產品,略過 seed");
+    console.log("Products already exist, skipping seed");
     return;
   }
 
@@ -122,7 +122,7 @@ async function main() {
     },
   });
 
-  console.log("Seed 完成:已建立 2 個示範產品");
+  console.log("Seed complete: created 2 demo products");
 }
 
 main()
